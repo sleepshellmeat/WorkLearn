@@ -1,0 +1,2 @@
+1、继续实践matplotlib.ipynb上的重要知识点及其代码
+2、实践 sea distance项目
