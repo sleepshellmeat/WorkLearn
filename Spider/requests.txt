@@ -1,0 +1,23 @@
+ Requests
+requests_get
+# url = '百度首页'
+# r = requests.get(url， headers = headers， params=data)
+# headers = {'User-Agent': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8'}
+# herders 是在外部定义好的一个头部  data是get带的参数，里面是原生的字典
+# print(r.text)  网页的字符串格式
+# 结果写到文件中
+# with open('baidu.html', 'wb') as fp:
+# 	  fp.write(r.content)
+requests_post
+# url = '必应翻译的接口'
+# formdata = {
+	'from': 'en',
+    'to': 'zh-CHS',
+    'text': 'lion'
+# }
+# r.requests.post(url, headers=headers, data=formdata)
+# post请求中，传入参数使用的是data。
+"""	r.text	查看字符串格式的响应
+	r.content	查看字节格式的响应
+	r.encoding	查看或设置编码类型
+	r.json() 	查看json格式响应,注意需要带小括号。	"""
