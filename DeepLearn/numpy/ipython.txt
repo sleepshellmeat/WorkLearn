@@ -1,0 +1,39 @@
+install jupyter
+# pip install jupyter
+start jupyter
+# jupyter notebook
+执行段落
+# Ctrl+Enter 执行当前行
+# Alt+Enter 执行并插入一行
+# Shift+Enter 执行并跳到下一行
+删除
+# 选中一行后，按两次D键
+notebook命令
+# Y:单元转入代码状态  M:转入MakeDown 
+插入
+# 按字母B（below）可以在你选中的一行下面添加新行, 同理A（above）。
+Markdown
+# 选择markdown模式，使用一个或多个“#”号可以切换标题等级，注意“#”号后面要跟空格
+# 在markdown模式下，可以使用页面样式 eg:<font color=red>print('Hello)</font>
+# 如果输出的页面太大，可以双击收起
+帮助
+# help() 使用help函数可以查看其他函数的使用方法，使用方法是定义函数时里面的注释。
+# ？ 函数之前加“？”号和help函数类似，不过是以弹出的形式出现
+# ？？ 加两个问号会显示这个函数的源码
+jupyter没有提示，TAB键自动补全。
+魔法命令
+# 运行外部Python文件，%run test.py 如果不在当前路径下，需要加一个绝对路径 eg: %run D/projects/python/test.py
+# 通过魔法指令导入的外部文件，里面的方法全部能用。
+2、运行计时
+# %time print('Hello AI') 
+# %timeit(平均值)
+3、查看变量和方法
+# %who 查看目前jupyter导入了什么变量和方法
+# %whos 这个更详细，给出哪些是变量，哪些是方法、函数。 
+# %who_ls 变量和方法装在一个列表中
+更多魔法命令
+# lsmagic
+jupyter中使用lunix命令
+# 需要在命令前加 ！ 
+
+
