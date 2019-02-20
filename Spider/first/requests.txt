@@ -1,4 +1,5 @@
  Requests
+requests的中文官方文档：http://cn.python-requests.org/zh_CN/latest/
 requests_get
 # url = '百度首页'
 # r = requests.get(url， headers = headers， params=data)
@@ -21,3 +22,19 @@ requests_post
 	r.content	查看字节格式的响应
 	r.encoding	查看或设置编码类型
 	r.json() 	查看json格式响应,注意需要带小括号。	"""
+	
+使用代理
+# 当爬取外网时，需要把小飞机模式改为全局模式。如果没小飞机，可以把国外的代理添加到代码中，也可爬取。
+# 自定义代理池，字典的形式。
+# eg: proxy = {'http': 'http://207.246.119.165:2019'}
+# 调用的方法时proxies,proxy的复数形式。
+# r = requests.get(url, headers=headers, proxies=proxy)
+Cookie
+# 当网页需要登陆的时候，可以创建一个会话，每次携带Session，例如人人网的爬取。
+# eg: s = requests.Session()  往下所有的操作都通过S.进行，另外Session加括号。
+# 手动登陆一次，使用fiddler抓取人人网的Login接口，以及提交的form表单。
+# 自定义form表单，向login接口发送post请求
+# eg: r = s.post(url, headers=headers, data=formdata)
+# 登陆后实验一下，对个人信息页面链接发送get请求
+# eg: r1 = s.get(url, headers=headers)
+
