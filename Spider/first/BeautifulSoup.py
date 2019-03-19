@@ -14,4 +14,5 @@ and they lived at the bottom of a well.</p>
 soup = BeautifulSoup(html, 'lxml')
 # 格式化打印
 # print(soup.prettify())
-print(soup.a)
+# print(soup.select('.title > b')[0].text)
+print(soup.select('a')[0]['href'])
