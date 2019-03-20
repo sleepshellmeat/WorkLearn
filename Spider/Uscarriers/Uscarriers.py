@@ -21,13 +21,20 @@ def parse_second(all_href_list):
         r = requests.get(start_url + href, headers)
         second_all = etree.HTML(r.text)
         second_href_list = second_all.xpath('//tr//a[contains(text(),"USS")]/@href')
-        print(second_href_list)
-        sleep(3)
+        return second_href_list
+
 
 def main():
     all_href_list = parse_navy_all()
-    parse_second(all_href_list)
-#
+    # parse_second(all_href_list)
+    second_href_list = parse_second(all_href_list)
+    for second_href in second_href_list:
+        sep = '\n'
+        fl = open('href.txt', 'w')
+        fl.write(sep.join(second_href))
+        sleep(2)
+        fl.close()
+
 if __name__ == '__main__':
     main()
 
