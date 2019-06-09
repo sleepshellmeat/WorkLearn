@@ -1,0 +1,102 @@
+import requests
+from lxml import etree
+from time import sleep
+
+
+url = 'http://www.uscarriers.net/cvn.htm'
+add_url = 'http://www.uscarriers.net/'
+
+headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36}'
+    }
+
+
+def parse_url():
+    r = requests.get(url, headers=headers)
+    tree = etree.HTML(r.text)
+    href_list = tree.xpath('//tr/td/div//a[contains(text(), "USS")]/@href')
+    return href_list
+
+
+def get_history_href(href_list):
+    history_href_list = []
+    for href in href_list:
+        r = requests.get(add_url + href, headers=headers)
+        tree = etree.HTML(r.text)
+        history_href = tree.xpath('//tr/td//a[contains(text(), "History")]/@href')[0]
+        history_href_list.append(history_href)
+    return history_href_list
+
+
+def get_info(href_list):
+    for href in href_list:
+        r = requests.get(add_url + href, headers=headers)
+        tree = etree.HTML(r.text)
+        # 取出所有的参数
+        all_canshu = tree.xpath('string(//tr/td/pre[@class="style2"])')
+
+        # 名称
+        name_list = tree.xpath('//tr/td/div//span/text()')
+        name = '  '.join(name_list)
+
+        # 建造时间
+        Keel_Laid = ...
+
+        # 命名时间
+        Christened = ...
+
+        # 服役时间
+        Commissioned = ...
+
+        # 建造商
+        Builder = ...
+
+        # 推进系统
+        Propulsion_system = ...
+
+        # 总长度
+        Lengths = ...
+
+        # 飞行甲板宽度
+        Flight_Deck_Width = ...
+
+        # 飞行甲板面积
+        Flight_Deck_Area = ...
+
+        # 船宽
+        Beam = ...
+
+        # 吃水深度
+        Draft = ...
+
+        # 排水量
+        Displacement = ...
+
+        # 速度
+        Speed = ...
+
+        # 飞机信息
+        Planes = ...
+
+        # 人员
+        Crew = ...
+
+        # 武器
+        Armament = ...
+
+        # 母港
+        Homeport = ...
+
+        sleep(5)
+        return all_canshu
+
+
+
+def main():
+    href_list = parse_url()
+    history_href_list = get_history_href(href_list)
+    a = get_info(href_list)
+    print(a)
+
+if __name__ == '__main__':
+    main()
