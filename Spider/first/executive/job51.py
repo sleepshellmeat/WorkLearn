@@ -11,6 +11,7 @@ def pinjie_url(key_word, page, url):
     url = url.format(key_word, page)
     return url
 
+href_list = []
 
 def parse_url(url):
     r = requests.get(url=url, headers=headers)
@@ -18,16 +19,20 @@ def parse_url(url):
     # tree = etree.HTML(r.text)
     # div_list = tree.xpath('')
     soup = BeautifulSoup(r.text, 'lxml')
-    el_list = soup.select('#resultList > .el')[1:]
-    for odiv in el_list:
-        # 取出el 下 t1 的href
-        href = odiv.find('a')['href']
-        return href
+    # Xpath '//div/div[@id="resultList"]/div[@class="el"]/p/span/a/@href'
+    href_list = soup.select('#resultList > .el')[1:]
+    # print(el_list[0:2])
+    # for odiv in el_list:
+    #     # 取出el 下 t1 的href
+    #     href = odiv.find('a')['href']
+    #     href_list.append(href)
+    #     print(len(href_list))
+    #     return href
 
-def parse_href(href):
-    r = requests.get(url=href, headers=headers)
-    r.encoding = 'gbk'
-    soup = BeautifulSoup(r.text, 'lxml')
+# def parse_href(href):
+#     r = requests.get(url=href, headers=headers)
+#     r.encoding = 'gbk'
+#     soup = BeautifulSoup(r.text, 'lxml')
 
 
 """
@@ -65,8 +70,8 @@ def main():
     # db = content_db()
     for page in range(start_page, end_page + 1):
         url = pinjie_url(key_word, page, url)
-        href = parse_url(url)
-        parse_href(href)
+        parse_url(url)
+        # parse_href(href)
         # print('正在爬取第%s页...' % page)
         # sleep(5)
         # print('结束爬取第%s页!' % page)

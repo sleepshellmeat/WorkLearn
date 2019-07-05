@@ -12,7 +12,6 @@ def parse_navy_all():
     r = requests.get(start_url, headers=headers)
     # 创建一个Xpath对象
     navy_all = etree.HTML(r.text)
-    # //tr//a[contains(text(),"USS")]/@href 解析二级页面的Xpath.
     all_href_list = navy_all.xpath('//tr//div[@align="center"]/a[1]/@href')
     return all_href_list
 
