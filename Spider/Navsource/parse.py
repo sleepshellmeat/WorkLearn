@@ -1,6 +1,6 @@
 import requests
 from lxml import etree
-import time
+from time import sleep
 import random
 import json
 
@@ -50,19 +50,32 @@ headers = {
 
 
 class Parse():
-    ...
-
-
-class Parse_Battleships():
     def __init__(self):
         ...
 
     def get_first_href(self):
-        r = requests.get(url=url_dict['battleships'], headers=headers)
+        """此方法适合取出 battleships aircraft_carriers escort_carriers 的一级页面链接
+           因为各个页面需要的链接不同，需要后面切片处理
+        """
+        r = requests.get(url=url_dict['aircraft_carriers'], headers=headers)
         tree = etree.HTML(r.text)
         # 此页面第一个不取，用列表切片去除
-        href_list = tree.xpath('//center/table/tbody/tr[2]/td/b/a/@href')[1:5]
+        href_list = tree.xpath('//center/table//tr/td/b/a/@href')
+        """//center/table/tbody/tr[2]/td/b/a/@href //center/table/tbody/tr/td/b/a/@href"""
         return href_list
+
+
+class Parse_Battleships(Parse):
+    def __init__(self):
+        ...
+
+    # def get_first_href(self):
+    #     r = requests.get(url=url_dict['battleships'], headers=headers)
+    #     tree = etree.HTML(r.text)
+    #     # 此页面第一个不取，用列表切片去除
+    #     href_list = tree.xpath('//center/table/tbody/tr[2]/td/b/a/@href')[1:5]
+    #     """//center[3]/table/tbody/tr  //center/table/tbody/tr/td/b/a/@href"""
+    #     return href_list
 
     def get_second_href(self):
         # 取出二级页面的href
@@ -74,19 +87,21 @@ class Parse_Battleships():
             for href in href_list:
                 second_href_list.append(href)
                 # break
-            time.sleep(random.random() * 5)
+            sleep(random.random() * 5)
             # break
         return second_href_list
 
     def get_info(self):
-        # try:
-            fp = open('battleships.txt', 'w', encoding='utf-8')
-            for href in self.get_second_href():
+
+        fp = open('battleships.txt', 'w', encoding='utf-8')
+        for href in self.get_second_href():
+            sleep(random.random() * 5)
+            if not href == 'http://www.navsource.org/archives/01/04a.htm':
                 r = requests.get(href, headers=headers)
                 tree = etree.HTML(r.text)
-                name = tree.xpath('/html/body/center/h1/b/font/text()')[0]
+                name = tree.xpath('/html/body//center/h1/b/font/text()')[0].strip()
                 info_list = tree.xpath('/html/body/text()')
-                info = ' '.join(info_list)
+                info = ' '.join(info_list).strip()
                 # 先取出存放CO的tr标签列表
                 tr_list = tree.xpath('//body/center[2]/center/table[1]//tr')[1:]
                 if len(tr_list) == 0:
@@ -96,7 +111,7 @@ class Parse_Battleships():
                     }
                     string = json.dumps(item, ensure_ascii=False)
                     fp.write(string + '\n')
-                    print('成功写入一个111')
+                    print('写入成功，此舰船没有历任舰长列表')
 
                 else:
                     # 遍历出来挨个进行取
@@ -116,10 +131,9 @@ class Parse_Battleships():
                     }
                     string = json.dumps(item, ensure_ascii=False)
                     fp.write(string + '\n')
-                    print('成功写入一个222')
-            fp.close()
-        # except:
-        #     print('又他妈错了。。。')
+                    print('成功写入')
+        fp.close()
+
 
 
 
