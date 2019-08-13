@@ -1,0 +1,9 @@
+# selenium google浏览器驱动下载
+http://chromedriver.storage.googleapis.com/index.html
+
+# 浏览器版本对应驱动的版本
+http://blog.csdn.net/huilan_same/article/details/51896672
+
+# selenium + phantomjs 
+# 模拟滚动条到底部的JS代码
+w.execute_script('document.body.scrollTop=10000') # 通常网页的高度也就七八百，这里设置10000肯定会到底部
