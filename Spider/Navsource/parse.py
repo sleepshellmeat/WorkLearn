@@ -50,14 +50,14 @@ headers = {
 
 
 class Parse():
-    def __init__(self):
-        ...
+    def __init__(self, url):
+        self.url = url
 
-    def get_first_href(self):
+    def get13_first_href(self):
         """此方法适合取出 battleships aircraft_carriers escort_carriers 的一级页面链接
            因为各个页面需要的链接不同，需要后面切片处理
         """
-        r = requests.get(url=url_dict['aircraft_carriers'], headers=headers)
+        r = requests.get(url=self.url, headers=headers)
         tree = etree.HTML(r.text)
         # 此页面第一个不取，用列表切片去除
         href_list = tree.xpath('//center/table//tr/td/b/a/@href')
@@ -66,21 +66,11 @@ class Parse():
 
 
 class Parse_Battleships(Parse):
-    def __init__(self):
-        ...
-
-    # def get_first_href(self):
-    #     r = requests.get(url=url_dict['battleships'], headers=headers)
-    #     tree = etree.HTML(r.text)
-    #     # 此页面第一个不取，用列表切片去除
-    #     href_list = tree.xpath('//center/table/tbody/tr[2]/td/b/a/@href')[1:5]
-    #     """//center[3]/table/tbody/tr  //center/table/tbody/tr/td/b/a/@href"""
-    #     return href_list
-
     def get_second_href(self):
-        # 取出二级页面的href
+        """取出battleships页面下除第一个和最后一个链接里的所有href,放入列表发送请求"""
         second_href_list = []
-        for href in self.get_first_href():
+        # 在battleships页面下有6个链接，第一个和最后一个不要，所以切片去掉
+        for href in self.get13_first_href()[1:5]:
             r = requests.get(href, headers=headers)
             tree = etree.HTML(r.text)
             href_list =tree.xpath('//tr/td/b/a/@href')
@@ -92,10 +82,11 @@ class Parse_Battleships(Parse):
         return second_href_list
 
     def get_info(self):
-
-        fp = open('battleships.txt', 'w', encoding='utf-8')
+        """对所有二级页面取出的href发送请求，获取名称，建造信息，舰长和其任职时间（判断是否有，有就取）"""
+        # fp = open('battleships.txt', 'w', encoding='utf-8')
         for href in self.get_second_href():
             sleep(random.random() * 5)
+            # 此列表中有一个链接页面格式和其它不一样，所以直接判断去除
             if not href == 'http://www.navsource.org/archives/01/04a.htm':
                 r = requests.get(href, headers=headers)
                 tree = etree.HTML(r.text)
@@ -108,10 +99,14 @@ class Parse_Battleships(Parse):
                     item = {
                         '名称': name,
                         '信息': info,
+                        'proson': 'False',
+                        'CO': ''
                     }
-                    string = json.dumps(item, ensure_ascii=False)
-                    fp.write(string + '\n')
                     print('写入成功，此舰船没有历任舰长列表')
+                    return item
+                    # string = json.dumps(item, ensure_ascii=False)
+                    # fp.write(string + '\n')
+                    # print('写入成功，此舰船没有历任舰长列表')
 
                 else:
                     # 遍历出来挨个进行取
@@ -121,18 +116,48 @@ class Parse_Battleships(Parse):
                         time = tr.xpath('./td[3]/text()')[0].strip()
                         it = {
                             '舰长': co_name,
-                            '任职时间': time
+                            '任职时间': time,
                         }
                         lt.append(it)
                     item = {
                         '名称': name,
                         '信息': info,
-                        'CO': lt
+                        'proson': 'True',
+                        'CO': lt,
                     }
-                    string = json.dumps(item, ensure_ascii=False)
-                    fp.write(string + '\n')
                     print('成功写入')
-        fp.close()
+                    return item
+                    # string = json.dumps(item, ensure_ascii=False)
+                    # fp.write(string + '\n')
+                    # print('成功写入')
+        # fp.close()
+
+
+class Parse_Aircraft_Carriers(Parse):
+    """此舰船无需进一步取出二级页面href,父类中get13_first_href方法
+       返回的就是直接可以取信息的href列表，需切片去除最后3个
+    """
+    def get_info(self):
+        for href in self.get13_first_href()[:-2]:
+            r = requests.get(url='http://www.navsource.org/archives/' + href, headers=headers)
+            tree = etree.HTML(r.text)
+            """
+            //tr/td/blockquote/b/ul//a[contains(text(), "Commanding")]/@href
+            //tr/td/blockquote/b/ul//li[contains(text(), "Commanding")]/a/@href
+            """
+            name = tree.xpath('/html/body//center/h1/b/font[contains(text(), "USS")]/text()')
+            co_href = tree.xpath('//tr/td/blockquote/b/ul//a[contains(text(), "Commanding")]/@href')
+            if len(co_href) == 0:
+                co_href = tree.xpath('//tr/td/blockquote/b/ul//li[contains(text(), "Commanding")]/a/@href')
+            else:
+                print('没有舰长列表。')
+
+
+
+
+
+
+
 
 
 

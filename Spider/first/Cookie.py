@@ -28,3 +28,6 @@ get_url = "http://www.renren.com/968673720/profile"
 # 携带Session的get请求
 r1 = s.get(get_url, headers=headers)
 print(r1.text)
+
+"""ck	
+	"""

@@ -99,7 +99,7 @@ def parse_href(href_list, fp):
 
 
 
-"""
+""""""
 def save_to_mysql(db, item):
     cursor = db.cursor()
     sql = 'insert into job(jobname, company, place, salary, publish_time) value("%s","%s","%s","%s","%s")' % (
@@ -119,7 +119,7 @@ def content_db():
         charset='utf8'
     )
     return db
-"""
+
 
 
 def main():

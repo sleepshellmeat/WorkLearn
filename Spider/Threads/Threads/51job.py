@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from time import sleep
+import time
 import threading
 from threading import Lock
 from queue import Queue
@@ -41,7 +41,7 @@ class Crawl_Thread(threading.Thread):
                 # 将请求后相应的页面数据put进数据队列
                 """此处若使用r.text需要在上面指定gbk格式，但是r.content不需要"""
                 self.data_queue.put(r.text)
-                sleep(2)
+                time.sleep(2)
             except Exception as e:
                 ...
         print('--%s--结束...' % self.name)
@@ -65,7 +65,7 @@ class Parse_Thread(threading.Thread):
             try:
                 html = self.data_queue.get(False)
                 self.parse(html)
-                sleep(2)
+                time.sleep(2)
             except Exception as e:
                 ...
         print('--%s--结束...' % self.name)
@@ -140,7 +140,7 @@ def main():
     # 将解析多线程列表循环出来，然后挨个进行创建，也就是创建对象的过程
     for name in parse_name_list:
         # 创建解析线程对象,并将所需参数传入
-        parse_thread = Parse_Thread(name, data_queue, fp, lock, page_queue)
+        parse_thread = Parse_Thread(name, data_queue, fp, lock)
         # 启动线程
         parse_thread.start()
         # 将线程添加到解析线程列表
@@ -175,4 +175,7 @@ def main():
 
 
 if __name__ == '__main__':
+    start = time.time()
     main()
+    end = time.time()
+    print('总共用时{}s'.format((end - start)))

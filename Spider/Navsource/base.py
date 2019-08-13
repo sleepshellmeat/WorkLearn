@@ -1,4 +1,4 @@
-from parse import Parse_Battleships
+import parse
 from save import SaveSql
 
 url_dict = {
@@ -22,11 +22,15 @@ url_dict = {
 }
 
 def main():
-    parse = Parse_Battleships(url=url_dict['battleships'])
-    reponse = parse.get_first_href()
-    print(reponse)
-    print(len(reponse))
-    print(type(reponse))
+    par = parse.Parse_Battleships(url=url_dict['battleships'])
+    res = par.get_second_href()
+    # sql = 'insert into battleships(name, info, proson, co) value("%s","%s","%s","%s")' % (item["名称"], item["信息"], item["proson"], item["CO"])
+    # connect = SaveSql('navsource', sql)
+    # connect.save_to_mysql()
+    # connect.connect_db().close()
+    print(res)
+    # print(len(item))
+    # print(type(item))
 
 
 if __name__ == '__main__':
